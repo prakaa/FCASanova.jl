@@ -1,0 +1,22 @@
+name = "FCASanova"
+uuid = "3df86718-31db-48de-8765-45303e54fd7e"
+authors = ["abiprakash007@gmail.com <abiprakash007@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
+Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+Glob = "c27321d9-0574-5035-807b-f59d2c89b15c"
+Parquet = "626c502c-15b0-58ad-a749-f091afb673ae"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+Query = "1a8c2f83-1ff3-5112-b086-8aa67b057ba1"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+StatsPlots = "f3b207a7-027a-5e70-b257-86293d7955fd"
+TimeSeries = "9e3dc215-6440-5c97-bce1-76c03772f85e"
