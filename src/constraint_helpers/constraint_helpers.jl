@@ -47,12 +47,19 @@ function load_binding_fcas_constraints(files::Array{String})
     n = length(files)
     dfs = Array{DataFrame}(undef, n)
     println("Loading binding constraints")
-    @showprogress for i in 1:n
+    p = Progress(n)
+    s_lock = Threads.SpinLock()
+    prog = Threads.Atomic{Int}(0)
+    Threads.@threads for i in 1:n
         @inbounds file = files[i]
-        chunk = DataFrame(read_parquet(file, use_threads=true))
+        chunk = DataFrame(read_parquet(file, use_threads=false))
         chunk = filter_by_prefix(chunk, :CONSTRAINTID, "F_")
         chunk = find_binding_constraints(chunk)
         @inbounds dfs[i] = chunk
+        Threads.atomic_add!(prog, 1)
+        lock(s_lock)
+        update!(p, prog[])
+        unlock(s_lock)
     end
     println("Binding constraints loaded")
     return dfs
@@ -133,6 +140,35 @@ function impute_constraint_region(constraint::String)
     reg_match = match(r"F_([A-Z]*)[_+{1,2}]", constraint)
     region = string(reg_match.captures[1])
     return region
+end
+
+"""
+    impute_constraint_categories)dfs::Array{DataFrame}
+
+Impute the FCAS service/market and region for which the constraint applies.
+Accepts an array of DataFrame and dispatches imputation across multiple threads.
+Returns a concatenated DataFrame with additional columns IMPUTED_REGION and IMPUTED_SERVICE.
+"""
+function impute_constraint_categories(dfs::Array{DataFrame})
+    n = length(dfs)
+    categorised = Array{DataFrame}(undef, n)
+    # creating DateFormat ahead of time speeds up DateTime conversion
+    format = Dates.DateFormat("yyyy/mm/dd HH:MM:SS")
+    println("Using $(Threads.nthreads()) threads to impute regions and services")
+    # Multi-thread across dfs
+    # Thread-safe by using explicit indices
+    Threads.@threads for i in 1:n
+        @inbounds df = dfs[i]
+        # impute region based on constraint naming guidelines
+        df.IMPUTED_REGION = impute_constraint_region.(df.CONSTRAINTID)
+        # impute FCAS service based on constraint naming guidelines
+        col = impute_constraint_service.(df.CONSTRAINTID)
+        df.IMPUTED_SERVICE = map_fcas_short_and_long(col)
+        df.SETTLEMENTDATE = DateTime.(df.SETTLEMENTDATE, format)
+        @inbounds categorised[i] = df
+    end
+    categorised_df = sort!(vcat(categorised...), :SETTLEMENTDATE)
+    return categorised_df
 end
 
 function map_binding_constraints(binding::DataFrame,
