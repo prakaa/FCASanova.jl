@@ -6,14 +6,3 @@ function filter_data_by_year(df::DataFrame, year::Int, datetime_col::Symbol)
     year_df = df[mask, :]
     return year_df
 end
-
-"""
-    filter_by_prefix(df::DataFrame, col::Symbol, prefix::String)
-
-Finds rows in the column `col` of DataFrame `df` that begin with `prefix`
-"""
-function filter_by_prefix(df::DataFrame, col::Symbol,
-                          prefix::String)
-    filtered_df = df[startswith.(df[:, col], prefix), :]
-    return filtered_df
-end
