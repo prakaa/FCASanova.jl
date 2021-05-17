@@ -1,6 +1,6 @@
 
 function list_data_by_years(dir::String; fformat::String="csv",
-                            years::UnitRange)
+                            years::Array{Int})
     files = String[]
     for year in years
         year_files = glob("*$year*.$fformat", dir)

@@ -16,7 +16,8 @@ include("filters/filters.jl")
 include("mappers/mappers.jl")
 include("plot_helpers/plot_settings.jl")
 
-export find_binding_constraints,
+export fcas_markets,
+       find_binding_constraints,
        filter_by_prefix,
        filter_data_by_year,
        groupby_and_sum,
@@ -29,4 +30,8 @@ export find_binding_constraints,
        map_binding_constraints,
        map_fcas_short_and_long,
        set_gr_plot_style
+
+const fcas_markets = ["RAISE6SEC", "RAISE60SEC", "LOWER6SEC", 
+                      "LOWER60SEC", "RAISE5MIN", "LOWER5MIN",
+                      "RAISEREG", "LOWERREG"]
 end
