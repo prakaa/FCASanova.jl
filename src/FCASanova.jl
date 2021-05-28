@@ -29,7 +29,7 @@ export fcas_markets,
        load_parquet_data,
        map_binding_constraints,
        map_fcas_short_and_long,
-       set_gr_plot_style
+       set_plot_style
 
 const fcas_markets = ["RAISE6SEC", "RAISE60SEC", "LOWER6SEC", 
                       "LOWER60SEC", "RAISE5MIN", "LOWER5MIN",
